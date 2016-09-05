@@ -9,9 +9,16 @@ public class Photo {
 
     private String url;
 
+    private String thumbnail;
+
     public Photo(PhotoDTO photoDTO) {
         title = photoDTO.title;
         url = photoDTO.url;
+        thumbnail = photoDTO.thumbnailUrl;
+    }
+
+    public String getThumbnail() {
+        return thumbnail;
     }
 
     public String getTitle() {
