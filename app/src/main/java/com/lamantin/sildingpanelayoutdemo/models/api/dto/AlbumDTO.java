@@ -5,11 +5,11 @@ import com.google.gson.annotations.Expose;
 
 public class AlbumDTO {
     @Expose
-    private int id;
+    public int id;
     @Expose
-    private int userId;
+    public int userId;
     @Expose
-    private String title;
+    public String title;
 
     public String toString() {
         return "id=" + id + " userId=" + userId + " title=" + title;

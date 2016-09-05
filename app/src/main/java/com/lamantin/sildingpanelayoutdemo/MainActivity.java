@@ -31,22 +31,6 @@ public class MainActivity extends AppCompatActivity {
         setContentView(R.layout.activity_main);
         Toolbar toolbar = (Toolbar) findViewById(R.id.toolbar);
         setSupportActionBar(toolbar);
-        ApiProvider.getApi(Constants.BASE_URL).getAlbumsByUser(1)
-            .subscribeOn(Schedulers.io())
-            .observeOn(AndroidSchedulers.mainThread())
-            .subscribe(albumDTOs -> {
-                for(AlbumDTO albumDTO : albumDTOs) {
-                    Log.d(TAG, "albums: " + albumDTO.toString());
-                }
-            });
-        ApiProvider.getApi(Constants.BASE_URL).getPhotosByAlbum(1)
-            .subscribeOn(Schedulers.io())
-            .observeOn(AndroidSchedulers.mainThread())
-            .subscribe(photoDTOs -> {
-                for(PhotoDTO photoDTO : photoDTOs) {
-                    Log.d(TAG, "photos: " + photoDTO.toString());
-                }
-            });
     }
 
     @Override

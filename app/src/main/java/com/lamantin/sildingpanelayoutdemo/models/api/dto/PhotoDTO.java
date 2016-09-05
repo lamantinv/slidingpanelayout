@@ -5,15 +5,15 @@ import com.google.gson.annotations.Expose;
 
 public class PhotoDTO {
     @Expose
-    private int id;
+    public int id;
     @Expose
-    private int albumId;
+    public int albumId;
     @Expose
-    private String title;
+    public String title;
     @Expose
-    private String url;
+    public String url;
     @Expose
-    private String thumbnailUrl;
+    public String thumbnailUrl;
 
     public String toString() {
         return "id=" + id + " albumId=" + albumId + " title=" + title +
