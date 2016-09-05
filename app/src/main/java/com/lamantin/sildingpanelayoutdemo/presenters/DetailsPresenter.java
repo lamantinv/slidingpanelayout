@@ -5,6 +5,7 @@ import android.os.Bundle;
 
 import com.lamantin.sildingpanelayoutdemo.App;
 import com.lamantin.sildingpanelayoutdemo.models.api.Album;
+import com.lamantin.sildingpanelayoutdemo.models.api.Photo;
 import com.lamantin.sildingpanelayoutdemo.models.api.SessionData;
 import com.lamantin.sildingpanelayoutdemo.views.DetailsView;
 
@@ -45,5 +46,9 @@ public class DetailsPresenter extends BasePresenter {
 
     public void setView(DetailsView view) {
         this.view = view;
+    }
+
+    public void onPhotoClick(Photo photo) {
+        //TODO
     }
 }

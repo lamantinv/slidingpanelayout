@@ -35,15 +35,10 @@ public class DetailsView extends FragmentView {
     @BindView(R.id.albums_pager)
     ViewPager albumsViewPager;
 
-    @Override
-    public void onCreate(@Nullable Bundle savedInstanceState) {
-        super.onCreate(savedInstanceState);
-        App.getComponent().inject(this);
-    }
-
     @Nullable
     @Override
     public View onCreateView(LayoutInflater inflater, @Nullable ViewGroup container, @Nullable Bundle savedInstanceState) {
+        App.getComponent().inject(this);
         View view = inflater.inflate(R.layout.fragment_main, container, false);
         unbinder = ButterKnife.bind(this, view);
         albumsAdapter = new AlbumsAdapter(getFragmentManager());

@@ -16,10 +16,6 @@ public class App extends Application {
     @Override
     public void onCreate() {
         super.onCreate();
-        component = buildComponent();
-    }
-
-    protected AppComponent buildComponent() {
-        return DaggerAppComponent.create();
+        component = DaggerAppComponent.create();
     }
 }

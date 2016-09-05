@@ -44,6 +44,9 @@ public class PhotosGridAdapter extends RecyclerView.Adapter<PhotosGridAdapter.Ph
 
     private void setPhoto(Photo photo, PhotosViewHolder holder) {
         Glide.with(holder.itemView.getContext()).load(photo.getThumbnail()).into(holder.photo);
+        holder.photo.setOnClickListener(view -> {
+            presenter.onPhotoClick(photo);
+        });
     }
 
     public void setValues(List<Photo> values) {

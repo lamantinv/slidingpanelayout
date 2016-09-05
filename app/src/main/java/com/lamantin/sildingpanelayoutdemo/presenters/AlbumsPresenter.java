@@ -3,6 +3,7 @@ package com.lamantin.sildingpanelayoutdemo.presenters;
 import android.os.Bundle;
 
 import com.lamantin.sildingpanelayoutdemo.models.api.Album;
+import com.lamantin.sildingpanelayoutdemo.models.api.Photo;
 import com.lamantin.sildingpanelayoutdemo.views.AlbumsView;
 
 import rx.Subscription;
@@ -43,5 +44,9 @@ public class AlbumsPresenter extends BasePresenter {
 
     public void setView(AlbumsView view) {
         this.view = view;
+    }
+
+    public void onPhotoClick(Photo photo) {
+//        detailsPresenter.onPhotoClick(photo);
     }
 }
