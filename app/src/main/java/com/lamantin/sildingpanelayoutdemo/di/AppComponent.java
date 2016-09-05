@@ -1,6 +1,9 @@
 package com.lamantin.sildingpanelayoutdemo.di;
 
 import com.lamantin.sildingpanelayoutdemo.models.api.SessionDataImpl;
+import com.lamantin.sildingpanelayoutdemo.presenters.BasePresenter;
+import com.lamantin.sildingpanelayoutdemo.views.AlbumsView;
+import com.lamantin.sildingpanelayoutdemo.views.DetailsView;
 
 import javax.inject.Singleton;
 
@@ -10,4 +13,11 @@ import dagger.Component;
 @Component(modules = {ModelModule.class, PresenterModule.class, ViewModule.class})
 public interface AppComponent {
     void inject(SessionDataImpl sessionData);
+
+    void inject(DetailsView detailsView);
+
+    void inject(AlbumsView albumsView);
+
+    void inject(BasePresenter basePresenter);
+
 }

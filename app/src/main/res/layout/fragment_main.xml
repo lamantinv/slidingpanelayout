@@ -1,4 +1,4 @@
-<android.support.v4.widget.SlidingPaneLayout xmlns:android="http://schemas.android.com/apk/res/android"
+<com.lamantin.sildingpanelayoutdemo.views.custom.PagerEnabledSlidingPaneLayout xmlns:android="http://schemas.android.com/apk/res/android"
     android:id="@+id/SlidingPanel"
     android:layout_width="match_parent"
     android:layout_height="match_parent" >
@@ -17,6 +17,12 @@
         android:background="@color/grey"
         android:orientation="vertical" >
 
+        <android.support.v4.view.ViewPager
+            android:id="@+id/albums_pager"
+            android:layout_alignParentBottom="true"
+            android:layout_width="match_parent"
+            android:layout_height="300dp" />
+
     </RelativeLayout>
 
-</android.support.v4.widget.SlidingPaneLayout>
+</com.lamantin.sildingpanelayoutdemo.views.custom.PagerEnabledSlidingPaneLayout>

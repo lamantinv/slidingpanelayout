@@ -3,7 +3,9 @@ package com.lamantin.sildingpanelayoutdemo.models.api;
 
 import com.lamantin.sildingpanelayoutdemo.models.api.dto.AlbumDTO;
 
-public class Album {
+import java.io.Serializable;
+
+public class Album implements Serializable {
 
     private int id;
 

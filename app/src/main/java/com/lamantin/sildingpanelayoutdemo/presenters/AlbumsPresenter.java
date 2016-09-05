@@ -2,10 +2,29 @@ package com.lamantin.sildingpanelayoutdemo.presenters;
 
 import android.os.Bundle;
 
+import com.lamantin.sildingpanelayoutdemo.models.api.Album;
+import com.lamantin.sildingpanelayoutdemo.views.AlbumsView;
+
+import rx.Subscription;
+
 public class AlbumsPresenter extends BasePresenter {
+
+    private AlbumsView view;
+    private Album album;
+
+    Subscription subscription;
+
     @Override
     public void onCreateView(Bundle savedInstanceState) {
-        //TODO
+        view.setAlbumName(album.getTitle());
+        view.setPageNumber(album.getId());
+        loadData();
+    }
+
+    public void loadData() {
+        subscription = sessionData.getPhotosByAlbum(album.getId()).subscribe(photos -> {
+           view.setPhotos(photos);
+        });
     }
 
     @Override
@@ -16,5 +35,13 @@ public class AlbumsPresenter extends BasePresenter {
     @Override
     public void onSaveInstanceState(Bundle savedInstanceState) {
         //TODO
+    }
+
+    public void setAlbum(Album album) {
+        this.album = album;
+    }
+
+    public void setView(AlbumsView view) {
+        this.view = view;
     }
 }
