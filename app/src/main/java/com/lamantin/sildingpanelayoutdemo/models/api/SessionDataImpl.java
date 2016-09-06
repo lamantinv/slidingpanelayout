@@ -62,5 +62,26 @@ public class SessionDataImpl implements SessionData {
                 });
     }
 
+    @Override
+    public Observable<List<Photo>> getPhotoHistory() {
+        return api.getPhotoHistory()
+                .map(photosDTOs -> {
+                    if (photosDTOs == null) {
+                        return null;
+                    }
+                    return Observable.from(photosDTOs)
+                            .map(Photo::new)
+                            .toList()
+                            .toBlocking()
+                            .first();
+                })
+                .subscribeOn(Schedulers.io())
+                .observeOn(AndroidSchedulers.mainThread())
+                .onErrorResumeNext(throwable -> {
+                    throwable.printStackTrace();
+                    return Observable.empty();
+                });
+    }
+
 
 }

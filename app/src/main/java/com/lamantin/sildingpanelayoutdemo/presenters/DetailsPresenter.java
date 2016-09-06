@@ -7,6 +7,7 @@ import android.util.Log;
 import com.lamantin.sildingpanelayoutdemo.models.api.Photo;
 import com.lamantin.sildingpanelayoutdemo.views.DetailsView;
 
+import java.io.Serializable;
 import java.util.LinkedList;
 import java.util.List;
 
@@ -35,7 +36,7 @@ public class DetailsPresenter extends BasePresenter {
         subscriptionAlbums = sessionData.getAlbumsByUser(1).subscribe(albums -> {
             view.setAlbums(albums);
         });
-        subscriptionHistory = sessionData.getPhotosByAlbum(1).subscribe(photos -> {
+        subscriptionHistory = sessionData.getPhotoHistory().subscribe(photos -> {
             photoLinkedList.addAll(photos);
             view.setHistory(new LinkedList<>(photoLinkedList));
             view.hideProgress();

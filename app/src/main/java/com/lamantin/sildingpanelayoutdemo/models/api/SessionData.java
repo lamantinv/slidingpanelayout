@@ -8,4 +8,5 @@ import rx.Observable;
 public interface SessionData {
     Observable<List<Album>> getAlbumsByUser(int userId);
     Observable<List<Photo>> getPhotosByAlbum(int albumId);
+    Observable<List<Photo>> getPhotoHistory();
 }

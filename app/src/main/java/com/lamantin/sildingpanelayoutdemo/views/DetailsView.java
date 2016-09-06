@@ -3,10 +3,11 @@ package com.lamantin.sildingpanelayoutdemo.views;
 
 import android.os.Bundle;
 import android.support.annotation.Nullable;
-import android.support.v4.app.Fragment;
+import android.support.v4.view.ViewCompat;
 import android.support.v4.view.ViewPager;
 import android.support.v7.widget.LinearLayoutManager;
 import android.support.v7.widget.RecyclerView;
+import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
@@ -32,6 +33,7 @@ import butterknife.Unbinder;
 
 public class DetailsView extends FragmentView {
 
+    private static final String TAG = "DetailsView";
     @Inject
     DetailsPresenter presenter;
     private Unbinder unbinder;
@@ -55,13 +57,13 @@ public class DetailsView extends FragmentView {
         View view = inflater.inflate(R.layout.fragment_main, container, false);
         unbinder = ButterKnife.bind(this, view);
         initViewPager();
-        initHistoryReycler();
+        initHistoryRecycler();
         presenter.setView(this);
         super.onCreateView(inflater, container, savedInstanceState);
         return view;
     }
 
-    private void initHistoryReycler() {
+    private void initHistoryRecycler() {
         LinearLayoutManager linearLayoutManager = new LinearLayoutManager(getContext());
         linearLayoutManager.setReverseLayout(true);
         historyRecycler.setHasFixedSize(true);
@@ -70,12 +72,15 @@ public class DetailsView extends FragmentView {
     }
 
     private void initViewPager() {
+        Log.d(TAG, "initViewPager");
         albumsAdapter = new AlbumsAdapter(getFragmentManager(), presenter);
         albumsViewPager.setAdapter(albumsAdapter);
     }
 
     public void setHistory(LinkedList<Photo> photoList) {
+        ViewCompat.setAlpha(historyRecycler, 0f);
         historyAdapter.setValues(photoList);
+        ViewCompat.animate(historyRecycler).alpha(1f).setDuration(500).start();
     }
 
     public void addToHistory(Photo photo) {
