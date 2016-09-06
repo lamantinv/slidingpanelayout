@@ -1,4 +1,7 @@
 <resources>
     <string name="app_name">SildingPaneLayoutDemo</string>
     <string name="action_settings">Settings</string>
+    <string name="page_number">Page number</string>
+    <string name="photo_name">Photo name</string>
+    <string name="album_name">Album name</string>
 </resources>

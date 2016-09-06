@@ -9,6 +9,7 @@ import android.support.v7.widget.RecyclerView;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
+import android.widget.ProgressBar;
 import android.widget.TextView;
 
 import com.lamantin.sildingpanelayoutdemo.App;
@@ -17,6 +18,7 @@ import com.lamantin.sildingpanelayoutdemo.models.api.Album;
 import com.lamantin.sildingpanelayoutdemo.models.api.Photo;
 import com.lamantin.sildingpanelayoutdemo.presenters.AlbumsPresenter;
 import com.lamantin.sildingpanelayoutdemo.presenters.BasePresenter;
+import com.lamantin.sildingpanelayoutdemo.presenters.DetailsPresenter;
 import com.lamantin.sildingpanelayoutdemo.views.adapters.PhotosGridAdapter;
 
 import java.util.List;
@@ -30,16 +32,19 @@ import butterknife.Unbinder;
 public class AlbumsView extends FragmentView {
 
     private static final String ALBUM = "album";
-    public static AlbumsView create(Album album) {
+    public static AlbumsView create(Album album, DetailsPresenter detailsPresenter) {
         AlbumsView view = new AlbumsView();
         Bundle args = new Bundle();
         args.putSerializable(ALBUM, album);
         view.setArguments(args);
+        view.detailsPresenter = detailsPresenter;
         return view;
     }
 
     @Inject
-    AlbumsPresenter presenter;
+    AlbumsPresenter albumsPresenter;
+
+    DetailsPresenter detailsPresenter;
 
     private Unbinder unbinder;
     @BindView(R.id.page_number)
@@ -51,6 +56,9 @@ public class AlbumsView extends FragmentView {
     @BindView(R.id.photos_recycler)
     RecyclerView photosRecycler;
 
+    @BindView(R.id.photos_pb)
+    ProgressBar photosProgressBar;
+
     private LinearLayoutManager layoutManager;
 
     PhotosGridAdapter photosGridAdapter;
@@ -59,9 +67,9 @@ public class AlbumsView extends FragmentView {
     public void onCreate(@Nullable Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         App.getComponent().inject(this);
-        presenter.setAlbum((Album) getArguments().getSerializable(ALBUM));
-        presenter.setView(this);
-        photosGridAdapter = new PhotosGridAdapter(presenter);
+        albumsPresenter.setAlbum((Album) getArguments().getSerializable(ALBUM));
+        albumsPresenter.setView(this);
+        photosGridAdapter = new PhotosGridAdapter(albumsPresenter);
     }
 
     @Nullable
@@ -83,10 +91,12 @@ public class AlbumsView extends FragmentView {
 
     @Override
     public void showProgress() {
+        photosProgressBar.setVisibility(View.VISIBLE);
     }
 
     @Override
     public void hideProgress() {
+        photosProgressBar.setVisibility(View.GONE);
     }
 
     @Override
@@ -107,7 +117,11 @@ public class AlbumsView extends FragmentView {
 
     @Override
     public BasePresenter getPresenter() {
-        return presenter;
+        return albumsPresenter;
+    }
+
+    public DetailsPresenter getDetailsPresenter() {
+        return detailsPresenter;
     }
 
     @Override

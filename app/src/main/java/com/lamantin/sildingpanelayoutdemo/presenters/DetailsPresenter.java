@@ -2,41 +2,54 @@ package com.lamantin.sildingpanelayoutdemo.presenters;
 
 
 import android.os.Bundle;
+import android.util.Log;
 
-import com.lamantin.sildingpanelayoutdemo.App;
-import com.lamantin.sildingpanelayoutdemo.models.api.Album;
 import com.lamantin.sildingpanelayoutdemo.models.api.Photo;
-import com.lamantin.sildingpanelayoutdemo.models.api.SessionData;
 import com.lamantin.sildingpanelayoutdemo.views.DetailsView;
 
+import java.util.LinkedList;
 import java.util.List;
-
-import javax.inject.Inject;
 
 import rx.Subscription;
 import rx.functions.Action1;
 
 public class DetailsPresenter extends BasePresenter {
 
+    private static final String TAG = "DetailsPresenter";
+
     private DetailsView view;
 
-    Subscription subscription;
+    private Subscription subscriptionAlbums;
+
+    private Subscription subscriptionHistory;
+    LinkedList<Photo> photoLinkedList = new LinkedList<>();
 
     @Override
     public void onCreateView(Bundle savedInstanceState) {
-        //TODO
+        //TODO data persistence
         loadData();
     }
 
     private void loadData() {
-        subscription = sessionData.getAlbumsByUser(1).subscribe(albums -> {
+        view.showProgress();
+        subscriptionAlbums = sessionData.getAlbumsByUser(1).subscribe(albums -> {
             view.setAlbums(albums);
+        });
+        subscriptionHistory = sessionData.getPhotosByAlbum(1).subscribe(photos -> {
+            photoLinkedList.addAll(photos);
+            view.setHistory(new LinkedList<>(photoLinkedList));
+            view.hideProgress();
         });
     }
 
     @Override
     public void onDestroyView() {
-        //TODO
+        if(!subscriptionAlbums.isUnsubscribed()) {
+            subscriptionAlbums.unsubscribe();
+        }
+        if(!subscriptionHistory.isUnsubscribed()) {
+            subscriptionHistory.unsubscribe();
+        }
     }
 
     @Override
@@ -49,6 +62,8 @@ public class DetailsPresenter extends BasePresenter {
     }
 
     public void onPhotoClick(Photo photo) {
-        //TODO
+        Log.d(TAG, "onPhotoClick " + photo.getUrl());
+        photoLinkedList.addFirst(photo);
+        view.addToHistory(photo);
     }
 }

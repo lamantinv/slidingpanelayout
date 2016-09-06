@@ -5,9 +5,12 @@ import android.os.Bundle;
 import android.support.annotation.Nullable;
 import android.support.v4.app.Fragment;
 import android.support.v4.view.ViewPager;
+import android.support.v7.widget.LinearLayoutManager;
+import android.support.v7.widget.RecyclerView;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
+import android.widget.ProgressBar;
 
 import com.lamantin.sildingpanelayoutdemo.App;
 import com.lamantin.sildingpanelayoutdemo.R;
@@ -16,7 +19,9 @@ import com.lamantin.sildingpanelayoutdemo.models.api.Photo;
 import com.lamantin.sildingpanelayoutdemo.presenters.BasePresenter;
 import com.lamantin.sildingpanelayoutdemo.presenters.DetailsPresenter;
 import com.lamantin.sildingpanelayoutdemo.views.adapters.AlbumsAdapter;
+import com.lamantin.sildingpanelayoutdemo.views.adapters.PhotosHistoryAdapter;
 
+import java.util.LinkedList;
 import java.util.List;
 
 import javax.inject.Inject;
@@ -35,25 +40,47 @@ public class DetailsView extends FragmentView {
     @BindView(R.id.albums_pager)
     ViewPager albumsViewPager;
 
+    @BindView(R.id.history_recycler)
+    RecyclerView historyRecycler;
+
+    @BindView(R.id.history_pb)
+    ProgressBar historyProgressBar;
+
+    PhotosHistoryAdapter historyAdapter = new PhotosHistoryAdapter();
+
     @Nullable
     @Override
     public View onCreateView(LayoutInflater inflater, @Nullable ViewGroup container, @Nullable Bundle savedInstanceState) {
         App.getComponent().inject(this);
         View view = inflater.inflate(R.layout.fragment_main, container, false);
         unbinder = ButterKnife.bind(this, view);
-        albumsAdapter = new AlbumsAdapter(getFragmentManager());
-        albumsViewPager.setAdapter(albumsAdapter);
-        super.onCreateView(inflater, container, savedInstanceState);
+        initViewPager();
+        initHistoryReycler();
         presenter.setView(this);
+        super.onCreateView(inflater, container, savedInstanceState);
         return view;
     }
 
-    public void setHistory(List<Photo> photoList) {
-        //TODO
+    private void initHistoryReycler() {
+        LinearLayoutManager linearLayoutManager = new LinearLayoutManager(getContext());
+        linearLayoutManager.setReverseLayout(true);
+        historyRecycler.setHasFixedSize(true);
+        historyRecycler.setLayoutManager(linearLayoutManager);
+        historyRecycler.setAdapter(historyAdapter);
+    }
+
+    private void initViewPager() {
+        albumsAdapter = new AlbumsAdapter(getFragmentManager(), presenter);
+        albumsViewPager.setAdapter(albumsAdapter);
+    }
+
+    public void setHistory(LinkedList<Photo> photoList) {
+        historyAdapter.setValues(photoList);
     }
 
     public void addToHistory(Photo photo) {
-        //TODO
+        historyAdapter.addValue(photo);
+        historyRecycler.scrollToPosition(0);
     }
 
     public void setAlbums(List<Album> albums) {
@@ -62,12 +89,12 @@ public class DetailsView extends FragmentView {
 
     @Override
     public void showProgress() {
-        //TODO
+        historyProgressBar.setVisibility(View.VISIBLE);
     }
 
     @Override
     public void hideProgress() {
-        //TODO
+        historyProgressBar.setVisibility(View.GONE);
     }
 
     @Override

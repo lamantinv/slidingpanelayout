@@ -23,8 +23,10 @@ public class AlbumsPresenter extends BasePresenter {
     }
 
     public void loadData() {
+        view.showProgress();
         subscription = sessionData.getPhotosByAlbum(album.getId()).subscribe(photos -> {
-           view.setPhotos(photos);
+            view.setPhotos(photos);
+            view.hideProgress();
         });
     }
 
@@ -47,6 +49,6 @@ public class AlbumsPresenter extends BasePresenter {
     }
 
     public void onPhotoClick(Photo photo) {
-//        detailsPresenter.onPhotoClick(photo);
+        view.getDetailsPresenter().onPhotoClick(photo);
     }
 }
