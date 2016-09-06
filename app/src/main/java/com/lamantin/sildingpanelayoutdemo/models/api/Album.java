@@ -7,9 +7,9 @@ import java.io.Serializable;
 
 public class Album implements Serializable {
 
-    private int id;
+    private final int id;
 
-    private String title;
+    private final String title;
 
     public Album(AlbumDTO albumDTO) {
         id = albumDTO.id;

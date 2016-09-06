@@ -5,9 +5,9 @@ import com.lamantin.sildingpanelayoutdemo.models.api.dto.PhotoDTO;
 
 public class Photo {
 
-    private String title;
+    private final String title;
 
-    private String url;
+    private final String url;
 
     private String thumbnail;
 

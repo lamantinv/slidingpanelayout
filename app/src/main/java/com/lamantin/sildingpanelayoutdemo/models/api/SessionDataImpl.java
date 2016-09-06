@@ -2,6 +2,7 @@ package com.lamantin.sildingpanelayoutdemo.models.api;
 
 
 import com.lamantin.sildingpanelayoutdemo.App;
+import com.squareup.sqlbrite.BriteDatabase;
 
 import java.util.List;
 
@@ -15,6 +16,9 @@ public class SessionDataImpl implements SessionData {
 
     @Inject
     Api api;
+
+    @Inject
+    BriteDatabase db;
 
     public SessionDataImpl() {
         App.getComponent().inject(this);
