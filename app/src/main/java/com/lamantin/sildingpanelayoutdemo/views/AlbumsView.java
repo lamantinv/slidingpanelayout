@@ -18,7 +18,6 @@ import com.lamantin.sildingpanelayoutdemo.models.api.Album;
 import com.lamantin.sildingpanelayoutdemo.models.api.Photo;
 import com.lamantin.sildingpanelayoutdemo.presenters.AlbumsPresenter;
 import com.lamantin.sildingpanelayoutdemo.presenters.BasePresenter;
-import com.lamantin.sildingpanelayoutdemo.presenters.DetailsPresenter;
 import com.lamantin.sildingpanelayoutdemo.views.adapters.PhotosGridAdapter;
 
 import java.util.List;
@@ -32,19 +31,16 @@ import butterknife.Unbinder;
 public class AlbumsView extends FragmentView {
 
     private static final String ALBUM = "album";
-    public static AlbumsView create(Album album, DetailsPresenter detailsPresenter) {
+    public static AlbumsView create(Album album) {
         AlbumsView view = new AlbumsView();
         Bundle args = new Bundle();
         args.putSerializable(ALBUM, album);
         view.setArguments(args);
-        view.detailsPresenter = detailsPresenter;
         return view;
     }
 
     @Inject
     AlbumsPresenter albumsPresenter;
-
-    DetailsPresenter detailsPresenter;
 
     private Unbinder unbinder;
     @BindView(R.id.page_number)
@@ -118,10 +114,6 @@ public class AlbumsView extends FragmentView {
     @Override
     public BasePresenter getPresenter() {
         return albumsPresenter;
-    }
-
-    public DetailsPresenter getDetailsPresenter() {
-        return detailsPresenter;
     }
 
     @Override

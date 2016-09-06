@@ -7,7 +7,6 @@ import android.support.v4.app.FragmentStatePagerAdapter;
 import android.util.Log;
 
 import com.lamantin.sildingpanelayoutdemo.models.api.Album;
-import com.lamantin.sildingpanelayoutdemo.presenters.DetailsPresenter;
 import com.lamantin.sildingpanelayoutdemo.views.AlbumsView;
 
 import java.util.ArrayList;
@@ -17,14 +16,13 @@ public class AlbumsAdapter extends FragmentStatePagerAdapter {
 
     private static final String TAG = "AlbumsAdapter";
     private List<Album> albums = new ArrayList<>();
-    private DetailsPresenter detailsPresenter;
 
-    public AlbumsAdapter(FragmentManager fragmentManager, DetailsPresenter detailsPresenter) {
+    public AlbumsAdapter(FragmentManager fragmentManager) {
         super(fragmentManager);
-        this.detailsPresenter = detailsPresenter;
     }
 
     public void setAlbums(List<Album> albums) {
+        Log.d(TAG, "notifyNewAlbums");
         this.albums = albums;
         notifyDataSetChanged();
     }
@@ -32,7 +30,7 @@ public class AlbumsAdapter extends FragmentStatePagerAdapter {
     @Override
     public Fragment getItem(int position) {
         Log.d(TAG, "create new item position : " + position);
-        return AlbumsView.create(albums.get(position), detailsPresenter);
+        return AlbumsView.create(albums.get(position));
     }
 
     @Override

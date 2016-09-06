@@ -4,12 +4,16 @@ package com.lamantin.sildingpanelayoutdemo.presenters;
 import android.os.Bundle;
 import android.util.Log;
 
+import com.lamantin.sildingpanelayoutdemo.App;
 import com.lamantin.sildingpanelayoutdemo.models.api.Photo;
+import com.lamantin.sildingpanelayoutdemo.models.api.SessionData;
 import com.lamantin.sildingpanelayoutdemo.views.DetailsView;
 
 import java.io.Serializable;
 import java.util.LinkedList;
 import java.util.List;
+
+import javax.inject.Inject;
 
 import rx.Subscription;
 import rx.functions.Action1;
@@ -24,6 +28,13 @@ public class DetailsPresenter extends BasePresenter {
 
     private Subscription subscriptionHistory;
     LinkedList<Photo> photoLinkedList = new LinkedList<>();
+
+    @Inject
+    SessionData sessionData;
+
+    public DetailsPresenter() {
+        App.getComponent().inject(this);
+    }
 
     @Override
     public void onCreateView(Bundle savedInstanceState) {
