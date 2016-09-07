@@ -2,7 +2,6 @@ package com.lamantin.sildingpanelayoutdemo.views.adapters;
 
 
 import android.support.v7.widget.RecyclerView;
-import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
@@ -12,7 +11,6 @@ import android.widget.TextView;
 import com.bumptech.glide.Glide;
 import com.lamantin.sildingpanelayoutdemo.R;
 import com.lamantin.sildingpanelayoutdemo.models.api.Photo;
-import com.lamantin.sildingpanelayoutdemo.presenters.AlbumsPresenter;
 
 import java.util.LinkedList;
 
@@ -30,7 +28,6 @@ public class PhotosHistoryAdapter extends RecyclerView.Adapter<PhotosHistoryAdap
 
     @Override
     public void onBindViewHolder(PhotosHistoryViewHolder holder, int position) {
-        Log.d(TAG, "onBindViewHolder " + position);
         Photo photo = values.get(position);
         setPhoto(photo, holder);
         setPhotoName(photo, holder);
@@ -42,11 +39,11 @@ public class PhotosHistoryAdapter extends RecyclerView.Adapter<PhotosHistoryAdap
     }
 
     private void setPhoto(Photo photo, PhotosHistoryViewHolder holder) {
-        Glide.with(holder.itemView.getContext()).load(photo.getUrl()).into(holder.photo);
+        Glide.with(holder.itemView.getContext()).load(photo.url()).into(holder.photo);
     }
 
     private void setPhotoName(Photo photo, PhotosHistoryViewHolder holder) {
-        holder.text.setText(photo.getTitle());
+        holder.text.setText(photo.title());
     }
 
     public void setValues(LinkedList<Photo> values) {
@@ -55,7 +52,7 @@ public class PhotosHistoryAdapter extends RecyclerView.Adapter<PhotosHistoryAdap
     }
 
     public void addValue(Photo value) {
-        values.addFirst(value);
+        values.add(value);
         notifyItemInserted(0);
     }
 

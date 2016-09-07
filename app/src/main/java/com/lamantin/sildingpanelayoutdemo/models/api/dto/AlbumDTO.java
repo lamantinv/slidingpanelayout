@@ -5,7 +5,7 @@ import com.google.gson.annotations.Expose;
 
 public class AlbumDTO {
     @Expose
-    public int id;
+    public long id;
     @Expose
     public int userId;
     @Expose

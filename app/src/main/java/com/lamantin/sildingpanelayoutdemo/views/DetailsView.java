@@ -72,7 +72,6 @@ public class DetailsView extends FragmentView {
     }
 
     private void initViewPager() {
-        Log.d(TAG, "initViewPager");
         albumsAdapter = new AlbumsAdapter(getFragmentManager());
         albumsViewPager.setAdapter(albumsAdapter);
     }

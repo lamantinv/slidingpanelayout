@@ -99,7 +99,7 @@ public class AlbumsView extends FragmentView {
     public void showError(String errorMessage) {
     }
 
-    public void setPageNumber(int number) {
+    public void setPageNumber(long number) {
         pageNumber.setText(String.valueOf(number));
     }
 

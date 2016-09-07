@@ -2,14 +2,13 @@ package com.lamantin.sildingpanelayoutdemo.presenters;
 
 
 import android.os.Bundle;
-import android.util.Log;
 
 import com.lamantin.sildingpanelayoutdemo.App;
+import com.lamantin.sildingpanelayoutdemo.models.api.Album;
 import com.lamantin.sildingpanelayoutdemo.models.api.Photo;
 import com.lamantin.sildingpanelayoutdemo.models.api.SessionData;
 import com.lamantin.sildingpanelayoutdemo.views.DetailsView;
 
-import java.io.Serializable;
 import java.util.LinkedList;
 import java.util.List;
 
@@ -21,6 +20,7 @@ import rx.functions.Action1;
 public class DetailsPresenter extends BasePresenter {
 
     private static final String TAG = "DetailsPresenter";
+    private static final String NEED_TO_RECREATE = "needToRecreate";
 
     private DetailsView view;
 
@@ -31,6 +31,14 @@ public class DetailsPresenter extends BasePresenter {
 
     @Inject
     SessionData sessionData;
+    private Action1<List<Album>> albumsCallback = albums -> {
+        view.setAlbums(albums);
+    };
+    private Action1<List<Photo>> photoCallback = photos -> {
+        photoLinkedList.addAll(photos);
+        view.setHistory(new LinkedList<>(photoLinkedList));
+        view.hideProgress();
+    };
 
     public DetailsPresenter() {
         App.getComponent().inject(this);
@@ -38,20 +46,18 @@ public class DetailsPresenter extends BasePresenter {
 
     @Override
     public void onCreateView(Bundle savedInstanceState) {
-        //TODO data persistence
-        loadData();
+        loadData(savedInstanceState != null && savedInstanceState.getBoolean(NEED_TO_RECREATE, false));
     }
 
-    private void loadData() {
+    private void loadData(boolean recreated) {
         view.showProgress();
-        subscriptionAlbums = sessionData.getAlbumsByUser(1).subscribe(albums -> {
-            view.setAlbums(albums);
-        });
-        subscriptionHistory = sessionData.getPhotoHistory().subscribe(photos -> {
-            photoLinkedList.addAll(photos);
-            view.setHistory(new LinkedList<>(photoLinkedList));
-            view.hideProgress();
-        });
+        if(recreated) {
+            subscriptionAlbums = sessionData.getAlbumsDB().subscribe(albumsCallback);
+            subscriptionHistory = sessionData.getPhotoHistoryDB().subscribe(photoCallback);
+        } else {
+            subscriptionAlbums = sessionData.getAlbumsByUser(1).subscribe(albumsCallback);
+            subscriptionHistory = sessionData.getPhotoHistory().subscribe(photoCallback);
+        }
     }
 
     @Override
@@ -66,7 +72,7 @@ public class DetailsPresenter extends BasePresenter {
 
     @Override
     public void onSaveInstanceState(Bundle savedInstanceState) {
-        //TODO
+        savedInstanceState.putBoolean(NEED_TO_RECREATE, true);
     }
 
     public void setView(DetailsView view) {
@@ -74,7 +80,7 @@ public class DetailsPresenter extends BasePresenter {
     }
 
     public void onPhotoClick(Photo photo) {
-        Log.d(TAG, "onPhotoClick " + photo.getUrl());
+        sessionData.savePhotoToHistory(photo);
         photoLinkedList.addFirst(photo);
         view.addToHistory(photo);
     }

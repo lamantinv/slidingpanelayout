@@ -8,11 +8,16 @@ import com.lamantin.sildingpanelayoutdemo.models.api.Photo;
 import com.lamantin.sildingpanelayoutdemo.models.api.SessionData;
 import com.lamantin.sildingpanelayoutdemo.views.AlbumsView;
 
+import java.util.List;
+
 import javax.inject.Inject;
 
 import rx.Subscription;
+import rx.functions.Action1;
 
 public class AlbumsPresenter extends BasePresenter {
+
+    private static final String NEED_TO_RECREATE = "needToRecreate";
 
     private AlbumsView view;
     private Album album;
@@ -25,23 +30,30 @@ public class AlbumsPresenter extends BasePresenter {
     @Inject
     DetailsPresenter detailsPresenter;
 
+    private Action1<List<Photo>> photoCallback = photos -> {
+        view.setPhotos(photos);
+        view.hideProgress();
+    };
+
     public AlbumsPresenter() {
         App.getComponent().inject(this);
     }
 
     @Override
     public void onCreateView(Bundle savedInstanceState) {
-        view.setAlbumName(album.getTitle());
-        view.setPageNumber(album.getId());
-        loadData();
+        view.setAlbumName(album.title());
+        view.setPageNumber(album.id());
+        loadData(savedInstanceState != null && savedInstanceState.getBoolean(NEED_TO_RECREATE, false));
     }
 
-    public void loadData() {
+    public void loadData(boolean recreated) {
         view.showProgress();
-        subscription = sessionData.getPhotosByAlbum(album.getId()).subscribe(photos -> {
-            view.setPhotos(photos);
-            view.hideProgress();
-        });
+        if(recreated) {
+            subscription = sessionData.getPhotoByAlbumDB(album.id()).subscribe(photoCallback);
+        } else {
+            subscription = sessionData.getPhotosByAlbum(album.id()).subscribe(photoCallback);
+        }
+
     }
 
     @Override
@@ -53,7 +65,7 @@ public class AlbumsPresenter extends BasePresenter {
 
     @Override
     public void onSaveInstanceState(Bundle savedInstanceState) {
-        //TODO
+        savedInstanceState.putBoolean(NEED_TO_RECREATE, true);
     }
 
     public void setAlbum(Album album) {

@@ -5,6 +5,7 @@ import android.app.Application;
 
 import com.lamantin.sildingpanelayoutdemo.di.AppComponent;
 import com.lamantin.sildingpanelayoutdemo.di.DaggerAppComponent;
+import com.lamantin.sildingpanelayoutdemo.di.DbModule;
 
 public class App extends Application {
     private static AppComponent component;
@@ -16,6 +17,8 @@ public class App extends Application {
     @Override
     public void onCreate() {
         super.onCreate();
-        component = DaggerAppComponent.create();
+        component = DaggerAppComponent.builder()
+                .dbModule(new DbModule(this))
+                .build();
     }
 }
