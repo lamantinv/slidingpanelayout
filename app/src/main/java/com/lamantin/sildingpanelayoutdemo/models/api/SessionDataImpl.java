@@ -13,6 +13,7 @@ import javax.inject.Inject;
 
 import rx.Observable;
 import rx.android.schedulers.AndroidSchedulers;
+import rx.functions.Action1;
 import rx.schedulers.Schedulers;
 
 public class SessionDataImpl implements SessionData {
@@ -51,12 +52,7 @@ public class SessionDataImpl implements SessionData {
                     .observeOn(Schedulers.io())
                     .subscribe(albums -> {
                         subscriber.onNext(albums);
-                        BriteDatabase.Transaction transaction = db.newTransaction();
-                        for(Album album : albums) {
-                            saveAlbum(album);
-                        }
-                        transaction.markSuccessful();
-                        transaction.end();
+                        saveAlbums(albums);
                     });
         })
                 .subscribeOn(Schedulers.io())
@@ -70,34 +66,35 @@ public class SessionDataImpl implements SessionData {
     @Override
     public Observable<List<Photo>> getPhotosByAlbum(long albumId) {
         return Observable.create((Observable.OnSubscribe<List<Photo>>) subscriber -> {
-            getPhotoByAlbumDB(albumId).subscribe(subscriber::onNext);
-            api.getPhotosByAlbum(albumId)
-                    .map(photosDTOs -> {
-                        if (photosDTOs == null) {
-                            subscriber.onNext(null);
-                            return null;
-                        }
-                        return Observable.from(photosDTOs)
-                                .map(Photo::fromDTO)
-                                .toList()
-                                .toBlocking()
-                                .first();
-                    })
-                    .onErrorResumeNext(throwable -> {
-                        throwable.printStackTrace();
-                        return Observable.empty();
-                    })
-                    .subscribeOn(Schedulers.io())
-                    .observeOn(Schedulers.io())
-                    .subscribe(photos -> {
-                        subscriber.onNext(photos);
-                        BriteDatabase.Transaction transaction = db.newTransaction();
-                        for(Photo photo : photos) {
-                            savePhoto(albumId, photo);
-                        }
-                        transaction.markSuccessful();
-                        transaction.end();
-                    });
+            getPhotoByAlbumDB(albumId).subscribe(photosFromDB -> {
+                if(photosFromDB.isEmpty()) {
+                    api.getPhotosByAlbum(albumId)
+                            .map(photosDTOs -> {
+                                if (photosDTOs == null) {
+                                    subscriber.onNext(null);
+                                    return null;
+                                }
+                                return Observable.from(photosDTOs)
+                                        .map(Photo::fromDTO)
+                                        .toList()
+                                        .toBlocking()
+                                        .first();
+                            })
+                            .onErrorResumeNext(throwable -> {
+                                throwable.printStackTrace();
+                                return Observable.empty();
+                            })
+                            .subscribeOn(Schedulers.io())
+                            .observeOn(Schedulers.io())
+                            .subscribe(photos -> {
+                                subscriber.onNext(photos);
+                                savePhotos(albumId, photos);
+                            });
+                } else {
+                    subscriber.onNext(photosFromDB);
+                }
+            });
+
         })
             .observeOn(AndroidSchedulers.mainThread())
             .onErrorResumeNext(throwable -> {
@@ -108,45 +105,6 @@ public class SessionDataImpl implements SessionData {
 
     @Override
     public Observable<List<Photo>> getPhotoHistory() {
-        return Observable.create((Observable.OnSubscribe<List<Photo>>) subscriber -> {
-            getPhotoHistoryDB().subscribe(subscriber::onNext);
-            api.getPhotoHistory()
-                    .map(photosDTOs -> {
-                        if (photosDTOs == null) {
-                            subscriber.onNext(null);
-                            return null;
-                        }
-                        return Observable.from(photosDTOs)
-                                .map(Photo::fromDTO)
-                                .toList()
-                                .toBlocking()
-                                .first();
-                    })
-                    .onErrorResumeNext(throwable -> {
-                        throwable.printStackTrace();
-                        return Observable.empty();
-                    })
-                    .subscribeOn(Schedulers.io())
-                    .observeOn(Schedulers.io())
-                    .subscribe(photos -> {
-                        subscriber.onNext(photos);
-                        BriteDatabase.Transaction transaction = db.newTransaction();
-                        for(Photo photo : photos) {
-                            savePhotoToHistory(photo);
-                        }
-                        transaction.markSuccessful();
-                        transaction.end();
-                    });
-        })
-                .observeOn(AndroidSchedulers.mainThread())
-                .onErrorResumeNext(throwable -> {
-                    throwable.printStackTrace();
-                    return Observable.empty();
-                });
-    }
-
-    @Override
-    public Observable<List<Photo>> getPhotoHistoryDB() {
         QueryObservable query = db.createQuery(Photo.HISTORY_TABLE, Photo.QUERY_PHOTO_FROM__HISTORY);
         return query.mapToList(Photo.MAPPER)
                 .subscribeOn(Schedulers.io())
@@ -169,6 +127,24 @@ public class SessionDataImpl implements SessionData {
                     throwable.printStackTrace();
                     return Observable.empty();
                 });
+    }
+
+    private void saveAlbums(List<Album> albums) {
+        BriteDatabase.Transaction transaction = db.newTransaction();
+        for(Album album : albums) {
+            saveAlbum(album);
+        }
+        transaction.markSuccessful();
+        transaction.end();
+    }
+
+    private void savePhotos(long albumId, List<Photo> photos) {
+        BriteDatabase.Transaction transaction = db.newTransaction();
+        for(Photo photo : photos) {
+            savePhoto(albumId, photo);
+        }
+        transaction.markSuccessful();
+        transaction.end();
     }
 
     @Override
@@ -220,10 +196,8 @@ public class SessionDataImpl implements SessionData {
                 .title(photo.title())
                 .url(photo.url())
                 .thumbnail(photo.thumbnail()).build();
-        int numberOfUpdated = db.update(Photo.HISTORY_TABLE, cv, Photo.ID + "=" + photo.id());
-        if(numberOfUpdated == 0) {
-            db.insert(Photo.HISTORY_TABLE, cv);
-        }
+
+        db.insert(Photo.HISTORY_TABLE, cv);
     }
 
 }

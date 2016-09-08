@@ -12,6 +12,7 @@ import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
 import android.widget.ProgressBar;
+import android.widget.TextView;
 
 import com.lamantin.sildingpanelayoutdemo.App;
 import com.lamantin.sildingpanelayoutdemo.R;
@@ -21,6 +22,8 @@ import com.lamantin.sildingpanelayoutdemo.presenters.BasePresenter;
 import com.lamantin.sildingpanelayoutdemo.presenters.DetailsPresenter;
 import com.lamantin.sildingpanelayoutdemo.views.adapters.AlbumsAdapter;
 import com.lamantin.sildingpanelayoutdemo.views.adapters.PhotosHistoryAdapter;
+
+import org.w3c.dom.Text;
 
 import java.util.LinkedList;
 import java.util.List;
@@ -33,7 +36,6 @@ import butterknife.Unbinder;
 
 public class DetailsView extends FragmentView {
 
-    private static final String TAG = "DetailsView";
     @Inject
     DetailsPresenter presenter;
     private Unbinder unbinder;
@@ -47,6 +49,9 @@ public class DetailsView extends FragmentView {
 
     @BindView(R.id.history_pb)
     ProgressBar historyProgressBar;
+
+    @BindView(R.id.error_field)
+    TextView errorField;
 
     PhotosHistoryAdapter historyAdapter = new PhotosHistoryAdapter();
 
@@ -65,7 +70,7 @@ public class DetailsView extends FragmentView {
 
     private void initHistoryRecycler() {
         LinearLayoutManager linearLayoutManager = new LinearLayoutManager(getContext());
-        linearLayoutManager.setReverseLayout(true);
+//        linearLayoutManager.setReverseLayout(true);
         historyRecycler.setHasFixedSize(true);
         historyRecycler.setLayoutManager(linearLayoutManager);
         historyRecycler.setAdapter(historyAdapter);
@@ -77,14 +82,17 @@ public class DetailsView extends FragmentView {
     }
 
     public void setHistory(LinkedList<Photo> photoList) {
+        errorField.setVisibility(View.GONE);
         ViewCompat.setAlpha(historyRecycler, 0f);
         historyAdapter.setValues(photoList);
         ViewCompat.animate(historyRecycler).alpha(1f).setDuration(500).start();
+        historyRecycler.scrollToPosition(historyAdapter.getItemCount() - 1);
     }
 
     public void addToHistory(Photo photo) {
+        errorField.setVisibility(View.GONE);
         historyAdapter.addValue(photo);
-        historyRecycler.scrollToPosition(0);
+        historyRecycler.scrollToPosition(historyAdapter.getItemCount() - 1);
     }
 
     public void setAlbums(List<Album> albums) {
@@ -102,8 +110,8 @@ public class DetailsView extends FragmentView {
     }
 
     @Override
-    public void showError(String errorMessage) {
-        //TODO
+    public void showEmptyList() {
+        errorField.setVisibility(View.VISIBLE);
     }
 
     @Override

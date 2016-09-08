@@ -15,6 +15,4 @@ public interface Api {
     Observable<List<AlbumDTO>> getAlbumsByUser(@Path("user") int user);
     @GET("/albums/{album}/photos")
     Observable<List<PhotoDTO>> getPhotosByAlbum(@Path("album") long album);
-    @GET("/albums/11/photos")
-    Observable<List<PhotoDTO>> getPhotoHistory();
 }

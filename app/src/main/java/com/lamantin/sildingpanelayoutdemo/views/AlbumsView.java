@@ -96,15 +96,15 @@ public class AlbumsView extends FragmentView {
     }
 
     @Override
-    public void showError(String errorMessage) {
+    public void showEmptyList() {
     }
 
     public void setPageNumber(long number) {
-        pageNumber.setText(String.valueOf(number));
+        pageNumber.setText(getString(R.string.page_number) + ": " + String.valueOf(number));
     }
 
     public void setAlbumName(String name) {
-        albumName.setText(name);
+        albumName.setText(getString(R.string.album_name) + ": " + name);
     }
 
     public void setPhotos(List<Photo> photos) {

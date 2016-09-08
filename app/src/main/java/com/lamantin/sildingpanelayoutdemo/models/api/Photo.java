@@ -3,13 +3,10 @@ package com.lamantin.sildingpanelayoutdemo.models.api;
 
 import android.content.ContentValues;
 import android.database.Cursor;
-import android.os.Build;
 
 import com.google.auto.value.AutoValue;
 import com.lamantin.sildingpanelayoutdemo.db.Db;
 import com.lamantin.sildingpanelayoutdemo.models.api.dto.PhotoDTO;
-
-import java.util.Date;
 
 import rx.functions.Func1;
 
@@ -22,13 +19,12 @@ public abstract class Photo {
     public static final String QUERY_PHOTO_FROM__HISTORY =
             "SELECT * FROM " + Photo.HISTORY_TABLE;
 
-    public static final String _ID = "_id";
+    public static final String _ID = "dbId";
     public static final String ID = "id";
     public static final String ALBUM_ID = "album_id";
     public static final String TITLE = "title";
     public static final String URL = "url";
     public static final String THUMBNAIL = "thumbnail";
-    public static final String DATE = "date";
     public static final String TABLE = "photos";
     public static final String HISTORY_TABLE = "photos_history";
 
@@ -67,11 +63,6 @@ public abstract class Photo {
 
         public Builder thumbnail(String thumbnail) {
             values.put(THUMBNAIL, thumbnail);
-            return this;
-        }
-
-        public Builder date(Date date) {
-            values.put(DATE, date.getTime());
             return this;
         }
 

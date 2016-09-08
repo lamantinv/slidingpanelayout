@@ -53,7 +53,7 @@ public class PhotosHistoryAdapter extends RecyclerView.Adapter<PhotosHistoryAdap
 
     public void addValue(Photo value) {
         values.add(value);
-        notifyItemInserted(0);
+        notifyItemInserted(values.size() - 1);
     }
 
     public static class PhotosHistoryViewHolder extends RecyclerView.ViewHolder {

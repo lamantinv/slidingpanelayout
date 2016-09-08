@@ -37,8 +37,6 @@ public final class DbOpenHelper extends SQLiteOpenHelper {
             + Photo.URL + " TEXT NOT NULL,"
             + Photo.THUMBNAIL + " TEXT NOT NULL"
             + ")";
-    private static final String CREATE_PHOTO_HISTORY_ID_INDEX =
-            "CREATE INDEX photo_history_id ON " + Photo.TABLE +" (" + Photo.ID + ")";
 
     public DbOpenHelper(Context context) {
         super(context, "test.db", null /* factory */, VERSION);
@@ -49,7 +47,6 @@ public final class DbOpenHelper extends SQLiteOpenHelper {
         db.execSQL(CREATE_PHOTOS);
         db.execSQL(CREATE_PHOTO_ALBUM_ID_INDEX);
         db.execSQL(CREATE_PHOTO_HISTORY);
-        db.execSQL(CREATE_PHOTO_HISTORY_ID_INDEX);
     }
 
     @Override public void onUpgrade(SQLiteDatabase db, int oldVersion, int newVersion) {

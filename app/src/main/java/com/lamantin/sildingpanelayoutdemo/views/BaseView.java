@@ -8,7 +8,7 @@ import butterknife.Unbinder;
 public interface BaseView {
     void showProgress();
     void hideProgress();
-    void showError(String errorMessage);
+    void showEmptyList();
 
     BasePresenter getPresenter();
     Unbinder getUnbinder();

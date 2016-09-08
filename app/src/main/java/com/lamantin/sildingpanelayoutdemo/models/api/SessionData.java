@@ -12,8 +12,6 @@ public interface SessionData {
 
     Observable<List<Photo>> getPhotoHistory();
 
-    Observable<List<Photo>> getPhotoHistoryDB();
-
     Observable<List<Photo>> getPhotoByAlbumDB(long albumId);
 
     Observable<List<Album>> getAlbumsDB();

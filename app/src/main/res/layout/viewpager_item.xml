@@ -13,6 +13,8 @@
     <TextView
         android:id="@+id/album_name"
         style="@style/PageTitleTextView"
+        android:paddingLeft="20dp"
+        android:paddingRight="20dp"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
         android:layout_gravity="center_horizontal"

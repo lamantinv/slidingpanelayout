@@ -4,4 +4,5 @@
     <string name="page_number">Page number</string>
     <string name="photo_name">Photo name</string>
     <string name="album_name">Album name</string>
+    <string name="no_history">There is no history yet. To add item click a photo in the bottom panel</string>
 </resources>

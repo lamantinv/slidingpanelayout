@@ -2,6 +2,7 @@ package com.lamantin.sildingpanelayoutdemo.presenters;
 
 
 import android.os.Bundle;
+import android.util.Log;
 
 import com.lamantin.sildingpanelayoutdemo.App;
 import com.lamantin.sildingpanelayoutdemo.models.api.Album;
@@ -37,6 +38,9 @@ public class DetailsPresenter extends BasePresenter {
     private Action1<List<Photo>> photoCallback = photos -> {
         photoLinkedList.addAll(photos);
         view.setHistory(new LinkedList<>(photoLinkedList));
+        if(photoLinkedList.isEmpty()) {
+            view.showEmptyList();
+        }
         view.hideProgress();
     };
 
@@ -53,7 +57,7 @@ public class DetailsPresenter extends BasePresenter {
         view.showProgress();
         if(recreated) {
             subscriptionAlbums = sessionData.getAlbumsDB().subscribe(albumsCallback);
-            subscriptionHistory = sessionData.getPhotoHistoryDB().subscribe(photoCallback);
+            subscriptionHistory = sessionData.getPhotoHistory().subscribe(photoCallback);
         } else {
             subscriptionAlbums = sessionData.getAlbumsByUser(1).subscribe(albumsCallback);
             subscriptionHistory = sessionData.getPhotoHistory().subscribe(photoCallback);
@@ -72,6 +76,7 @@ public class DetailsPresenter extends BasePresenter {
 
     @Override
     public void onSaveInstanceState(Bundle savedInstanceState) {
+        Log.d(TAG, "onSaveInstanceState");
         savedInstanceState.putBoolean(NEED_TO_RECREATE, true);
     }
 
@@ -81,7 +86,7 @@ public class DetailsPresenter extends BasePresenter {
 
     public void onPhotoClick(Photo photo) {
         sessionData.savePhotoToHistory(photo);
-        photoLinkedList.addFirst(photo);
+        photoLinkedList.add(photo);
         view.addToHistory(photo);
     }
 }
