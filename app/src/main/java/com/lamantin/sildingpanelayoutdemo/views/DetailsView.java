@@ -5,6 +5,7 @@ import android.os.Bundle;
 import android.support.annotation.Nullable;
 import android.support.v4.view.ViewCompat;
 import android.support.v4.view.ViewPager;
+import android.support.v4.widget.SlidingPaneLayout;
 import android.support.v7.widget.LinearLayoutManager;
 import android.support.v7.widget.RecyclerView;
 import android.util.Log;
@@ -22,6 +23,7 @@ import com.lamantin.sildingpanelayoutdemo.presenters.BasePresenter;
 import com.lamantin.sildingpanelayoutdemo.presenters.DetailsPresenter;
 import com.lamantin.sildingpanelayoutdemo.views.adapters.AlbumsAdapter;
 import com.lamantin.sildingpanelayoutdemo.views.adapters.PhotosHistoryAdapter;
+import com.lamantin.sildingpanelayoutdemo.views.custom.PagerEnabledSlidingPaneLayout;
 
 import org.w3c.dom.Text;
 
@@ -70,7 +72,6 @@ public class DetailsView extends FragmentView {
 
     private void initHistoryRecycler() {
         LinearLayoutManager linearLayoutManager = new LinearLayoutManager(getContext());
-//        linearLayoutManager.setReverseLayout(true);
         historyRecycler.setHasFixedSize(true);
         historyRecycler.setLayoutManager(linearLayoutManager);
         historyRecycler.setAdapter(historyAdapter);
